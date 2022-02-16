@@ -10,8 +10,8 @@ Compare crime rates to precipitation
 
 ### Datasets that will be utilized
 <ul>
-<li> [Crime Rates](https://data.colorado.gov/Public-Safety/Crime-Offenses-by-Police-District-2001-2016-in-Col/ya69-n6ta) </li>
-<li> [Colorado precipitation] () </li>
+  <li> [Crime Rates](https://data.colorado.gov/Public-Safety/Crime-Offenses-by-Police-District-2001-2016-in-Col/ya69-n6ta) </li>
+  <li> [Colorado precipitation](https://www.uea.ac.uk/web/groups-and-centres/climatic-research-unit/data) </li>
 </ul>
 
 ### Python functionality group will be exploring with analysis
