@@ -12,4 +12,11 @@ Compare crime rates to precipitation, by county in Colorado.
 [Colorado precipitation](https://data.colorado.gov/Environment/Rain-Hail-and-Snow-in-Colorado-2015/mqid-8hv2) <br>
 
 ### Python functionality group will be exploring with analysis
-We'd like to use a combination of NumPy, matplotlib, and possibly Plotly. 
+Using Pandas, other modules TBD. 
+
+### Deliverables
+1. This README file
+2. Data files
+3. requirements.txt file
+4. Python scripts
+5. Screenshot of console virtual environment
