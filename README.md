@@ -5,11 +5,11 @@
 Brian McCullough </p>
 
 ### Analysis Objective
-Compare crime rates to precipitation
+Compare crime rates to precipitation, by county in Colorado. 
 
 ### Datasets that will be utilized
-[Crime Rates](https://data.colorado.gov/Public-Safety/Crime-Offenses-by-Police-District-2001-2016-in-Col/ya69-n6ta) <br>
-[Colorado precipitation](https://data.colorado.gov/Environment/Rain-Hail-and-Snow-in-Colorado-2015/mqid-8hv2)
+[Crime Rates](https://data.colorado.gov/Public-Safety/Crimes-in-Colorado-1997-to-2015/6vnq-az4b) <br>
+[Colorado precipitation](https://data.colorado.gov/Environment/Rain-Hail-and-Snow-in-Colorado-2015/mqid-8hv2) <br>
 
 ### Python functionality group will be exploring with analysis
-We'd like to use a combination of NumPy, matplotlib, and possibly Plotly.
+We'd like to use a combination of NumPy, matplotlib, and possibly Plotly. 
