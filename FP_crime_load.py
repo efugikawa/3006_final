@@ -6,28 +6,62 @@ Created on Tue Mar  1 21:48:47 2022
 """
 """ module to load and clean the Crime data from Colorado """
 
-#import csv
+# import csv
+
+
+
+
 import os
 import requests
 import pandas as pd
+def clean_CO_crime_data(raw_DF):
+    """ function to clean up missing data and create an Age group"""
+    raw_DF['age_num'] = pd.to_numeric(raw_DF['age_num'])
+    raw_DF['age_num'] = raw_DF['age_num'].fillna(1000)
+    raw_DF['age_grp'] = 10 * (raw_DF['age_num']//10)
 
-def load_CO_crime_data():
-   pathName = os.getcwd()
-   fileName = 'Crimes_in_Colorado_1997_to_2015.csv'
-   
-   files = [file for file in os.listdir(os.getcwd())]
-   
-   if fileName not in files:
-       url = 'https://data.colorado.gov/api/views/6vnq-az4b/rows.csv?accessType=DOWNLOAD'
-       
-       r = requests.get(url, stream = True)
-       
-       with open("Crimes_in_Colorado_1997_to_2015.csv", "wb") as f:
-           for chunk in r.iter_content(chunk_size = 16*1024):
-               f.write(chunk)
-
-   test_DF = pd.read_csv(os.path.join(pathName, fileName), nrows=1000)
+    return raw_DF
 
 
-if __name__ == "__main__":
-      load_CO_crime_data()
+def load_CO_crime_data(rprtYr):
+    """ function to load the crime data, either from a file or the source site """
+    pathName = os.getcwd()
+    fileName = "Crimes_in_Colorado_1997_to_2015.csv"
+
+    files = [file for file in os.listdir(pathName)]
+
+    if fileName not in files:
+        url = (
+            "https://data.colorado.gov/api/views/6vnq-az4b/rows.csv?accessType=DOWNLOAD"
+        )
+
+        r = requests.get(url, stream=True)
+
+        with open("Crimes_in_Colorado_1997_to_2015.csv", "wb") as f:
+            for chunk in r.iter_content(chunk_size=16 * 1024):
+                f.write(chunk)
+
+    chunk_size = 50000
+    crime_DF = pd.DataFrame()
+    dateStart = pd.Timestamp(rprtYr, 1, 1)
+    dateEnd = pd.Timestamp(rprtYr, 12, 31)
+
+    for chunk in pd.read_csv(
+            os.path.join(pathName, fileName),
+            chunksize=chunk_size,
+            parse_dates=["incident_date"],
+            keep_default_na=False,
+            na_values=0):
+        tempDF = chunk[
+            (chunk["incident_date"] >= dateStart) & (
+                chunk["incident_date"] <= dateEnd)
+        ]
+        crime_DF = pd.concat([crime_DF, tempDF], ignore_index=True)
+
+    out_crime_DF = clean_CO_crime_data(crime_DF)
+
+    return out_crime_DF
+
+
+# if __name__ == "__main__":
+#       load_CO_crime_data()
