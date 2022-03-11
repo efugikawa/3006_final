@@ -19,6 +19,7 @@ Pandas, Geopandas, matplotlib
 what args you need, etc
 
 ### Results of Analysis
+Hypothesis: Rain causes more crime. See [Crazy Ex-Girlfriend](https://www.youtube.com/watch?v=tDx6ai-HA1M&ab_channel=racheldoesstuff)
 
 ### Deliverables
 1. This README file
