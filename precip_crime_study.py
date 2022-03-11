@@ -36,7 +36,8 @@ def parser_config():
 
 def gpd_County(rain_DF, county_DF):
     """ function to assign county label to nearest Lat/Long precipitation data """
-    logging.debug("DEBUG create geodataframes")
+    logging.info("creating geodataframes")
+    logging.debug("DEBUG creating gdfs for precip and county centroids")
     gdf_rain = gpd.GeoDataFrame(
         rain_DF, geometry=gpd.points_from_xy(rain_DF['lat'], rain_DF['lng']))
     gdf_cnty = gpd.GeoDataFrame(county_DF, geometry=gpd.points_from_xy(
