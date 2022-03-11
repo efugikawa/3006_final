@@ -12,8 +12,13 @@ Compare crime rates to precipitation, by county in Colorado.
 [Colorado precipitation](https://data.colorado.gov/Environment/Rain-Hail-and-Snow-in-Colorado-2015/mqid-8hv2) <br>
 [Colorado County Seats](https://data.colorado.gov/County/Colorado-County-Seats/gqse-2qk8/data) <br>
 
-### Python functionality group will be exploring with analysis
-Using Pandas, other modules TBD. 
+### Python functionalities
+Pandas, Geopandas, matplotlib
+
+### How to run this script
+what args you need, etc
+
+### Results of Analysis
 
 ### Deliverables
 1. This README file
