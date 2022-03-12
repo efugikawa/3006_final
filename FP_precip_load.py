@@ -4,29 +4,50 @@ Created on Tue Mar  1 21:48:47 2022
 
 @author: bkmcc
 """
-""" module to load and clean the Crime data from Colorado """
-
-
-
 
 import os
 import requests
 import pandas as pd
-def clean_CO_precip_data(raw_DF):
+import numpy as np
+
+
+def clean_CO_precip_data(raw_DF, Logger):
     """function to clean raw precipitation data"""
+
+    raw_DF[raw_DF['prcp'] == ""] = np.NaN
+    raw_DF[raw_DF['snowfall'] == ""] = np.NaN
+
     raw_DF["prcp"] = raw_DF["prcp"].fillna(0)
+    raw_DF.loc[(raw_DF.prcp < 0), 'prcp'] = 0
+
     raw_DF["snowfall"] = raw_DF["snowfall"].fillna(0)
+    raw_DF["snowfall"] = raw_DF["snowfall"].astype("float")
+    raw_DF.loc[(raw_DF.snowfall < 0), 'snowfall'] = 0
+
     raw_DF["snowfallswe"] = raw_DF["snowfallswe"].fillna(0)
     raw_DF["snowdepth"] = raw_DF["snowdepth"].fillna(0)
     raw_DF["snowdepthswe"] = raw_DF["snowdepthswe"].fillna(0)
+
+    raw_DF['lat'] = raw_DF['lat'].fillna(0)
+    raw_DF['lng'] = raw_DF['lng'].fillna(0)
+
     raw_DF["xy"] = raw_DF[['lat', 'lng']].apply(tuple, axis=1)
+
+    Logger.debug(f"weather data BEFORE removing duplicates = {raw_DF.shape}")
+    # remove records where prcp + snowfall = 0
+    # *********ASK IAN***************
+    #raw_DF = raw_DF[(raw_DF.prcp > 0) | (raw_DF.snowfall > 0)]
+    Logger.debug(f"weather data AFTER removing duplicates = {raw_DF.shape}")
+
     return raw_DF
 
 
-def load_CO_precip_data(rprtYr):
+def load_CO_precip_data(rprtYr, Logger):
     """function to load the CO precipitation data for a selected year"""
     pathName = os.getcwd()
     fileName = "Rain_hail_snow_in_CO_1999_to_2015.csv"
+    Logger.info(f"CO weather data - start load")
+    Logger.debug(f"filepath = {pathName}")
 
     files = [file for file in os.listdir(os.getcwd())]
 
@@ -55,7 +76,11 @@ def load_CO_precip_data(rprtYr):
             (chunk["obs_date"] >= dateStart) & (chunk["obs_date"] <= dateEnd)
         ]
         precip_DF = pd.concat([precip_DF, tempDF], ignore_index=True)
-    out_precip_DF = clean_CO_precip_data(precip_DF)
+        Logger.debug(f"chunk loaded - {tempDF.shape}")
+
+    Logger.debug(f"CO weather data - data loaded / start clean")
+    out_precip_DF = clean_CO_precip_data(precip_DF, Logger)
+    Logger.debug(f"CO weather data - data cleaned / return to MAIN")
 
     return out_precip_DF
 
