@@ -6,8 +6,6 @@ Created on Tue Mar  1 21:48:47 2022
 """
 """ module to load and clean the Crime data from Colorado """
 
-# import csv
-
 
 
 
@@ -21,7 +19,7 @@ def clean_CO_precip_data(raw_DF):
     raw_DF["snowfallswe"] = raw_DF["snowfallswe"].fillna(0)
     raw_DF["snowdepth"] = raw_DF["snowdepth"].fillna(0)
     raw_DF["snowdepthswe"] = raw_DF["snowdepthswe"].fillna(0)
-
+    raw_DF["xy"] = raw_DF[['lat', 'lng']].apply(tuple, axis=1)
     return raw_DF
 
 
