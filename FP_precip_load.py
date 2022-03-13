@@ -9,6 +9,7 @@ import os
 import requests
 import pandas as pd
 import numpy as np
+import logging
 
 
 def clean_CO_precip_data(raw_DF, Logger):
@@ -34,15 +35,15 @@ def clean_CO_precip_data(raw_DF, Logger):
     raw_DF["xy"] = raw_DF[['lat', 'lng']].apply(tuple, axis=1)
 
     Logger.debug(f"weather data BEFORE removing duplicates = {raw_DF.shape}")
-    # remove records where prcp + snowfall = 0
-    # *********ASK IAN***************
-    #raw_DF = raw_DF[(raw_DF.prcp > 0) | (raw_DF.snowfall > 0)]
+
+    raw_DF = raw_DF[(raw_DF.prcp > 0) | (raw_DF.snowfall > 0)]
+    raw_DF = raw_DF.reset_index()
     Logger.debug(f"weather data AFTER removing duplicates = {raw_DF.shape}")
 
     return raw_DF
 
 
-def load_CO_precip_data(rprtYr, Logger):
+def load_CO_precip_data(rprtYr, Logger=logging.getLogger()):
     """function to load the CO precipitation data for a selected year"""
     pathName = os.getcwd()
     fileName = "Rain_hail_snow_in_CO_1999_to_2015.csv"

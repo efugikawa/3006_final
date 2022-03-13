@@ -28,6 +28,8 @@ def load_CO_county_data(Logger):
     co_DF = pd.read_csv(os.path.join(co_pathName, co_fileName))
     co_DF = co_DF[["COUNTY", "CENT_LAT", "CENT_LONG"]]
 
+    co_DF['COUNTY'] = co_DF['COUNTY'].str.lower()
+
     Logger.debug(f"CO county data - data loaded / return to MAIN")
 
     return co_DF

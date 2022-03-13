@@ -8,8 +8,8 @@ import logging
 
 
 class Logger_FP_BE:
-    def __init__(self):
-        self.__log_config()
+    def __init__(self, verbose=False):
+        self.__log_config(verbose=verbose)
 
     def debug(self, errMsg):
         logging.debug(errMsg)
@@ -17,11 +17,13 @@ class Logger_FP_BE:
     def info(self, errMsg):
         logging.info(errMsg)
 
-    def __log_config(self):
+    def __log_config(self, verbose=False):
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)  # i.e. everything
         formatter = logging.Formatter(
             '%(asctime)s:%(levelname)s:%(relativeCreated)d:%(message)s')
+
+        # change fileName to variable
 
         fh = logging.FileHandler("precip_crime_logs.log", 'w')
         fh.setLevel(logging.DEBUG)  # everything prints to log file
@@ -29,5 +31,9 @@ class Logger_FP_BE:
         logger.addHandler(fh)
 
         sh = logging.StreamHandler()
-        sh.setLevel(logging.INFO)  # only INFO and greater print to console
+        if verbose:
+            sh.setLevel(logging.DEBUG)
+        else:
+            sh.setLevel(logging.INFO)
+
         logger.addHandler(sh)

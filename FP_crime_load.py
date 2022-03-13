@@ -18,12 +18,15 @@ def clean_CO_crime_data(raw_DF, Logger):
     raw_DF['age_num'] = raw_DF['age_num'].fillna(1000)
     raw_DF['age_grp'] = 10 * (raw_DF['age_num']//10)
 
+    raw_DF['primary_county'] = raw_DF['primary_county'].str.lower()
+
     Logger.debug(f"CO crime data : clean complete")
     return raw_DF
 
 
 def load_CO_crime_data(rprtYr, Logger):
     """ function to load the crime data, either from a file or the source site """
+
     pathName = os.getcwd()
     fileName = "Crimes_in_Colorado_1997_to_2015.csv"
 

@@ -16,10 +16,14 @@ import os
 
 def parser_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument("year", type=int, choices=[1999, 2000, 2001, 2002, 2003, 2004, 2005,
-                        2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015],
+    parser.add_argument("year", type=int, choices=range(1999, 2016),  # change to Range(1999,2016)
                         help="four digit year from 1999 to 2015")
+    parser.add_argument("--verbose", default=False)
+    parser.add_argument("split", type=str, choices=['7d', '30d', '90d'], default='7d',
+                        help="pick split time to capture crime in relation to weather")
 
+
+# add_argument - verbose for different logging print / capture levels
     return parser.parse_args()
 
 #     ****Version 1: Geopandas attempt****   (will add write up in final)
@@ -35,6 +39,18 @@ def parser_config():
 #     #gdf_cnty.columns = colNameList
 
 #     return gdf_rain, gdf_cnty
+
+
+def the_big_deal(df_rain, df_crime, split):
+    if split == '7d':
+        day_fence = 7
+    elif split == '30d':
+        day_fence = 30
+    else:
+        day_fence = 90
+
+    df_rain['alt_prcp'] = df_rain['prcp'] + df_rain['snowfall']
+    df_g_rain = df_rain.groupby(['county', 'obs_date', ])
 
 
 def min_dist_count(row, df_cnty):
@@ -56,9 +72,9 @@ def min_dist_count(row, df_cnty):
 def main():
     """ central program for comparing weather and crime analysis """
 
-    Logger = cls_log.Logger_FP_BE()
-
     args = parser_config()
+    Logger = cls_log.Logger_FP_BE(args.verbose)
+
     Logger.info('main function started')
 
     tempYear = args.year
@@ -84,9 +100,12 @@ def main():
         lambda row: min_dist_count(row, df_County))
     df_Precip = pd.merge(df_Precip, df_unique_Precip, how='left', on=[
                          'st_num', 'lat', 'lng', 'xy'])
-    df_Precip['county'] = df_Precip['county'].str.lower()
+    # df_Precip['county'] = df_Precip['county'].str.lower()
     Logger.debug(f" DF for precip has county added := {df_Precip.shape}")
     Logger.info(f"county classification added to precipitation data")
+
+    # major join of crime data with weather data by split args value
+    output_DF = the_big_deal(df_Precip, df_Crime, args.split)
 
     pathName = os.getcwd()
     csv_precip = 'CO_precip_data.csv'
