@@ -13,13 +13,15 @@ Compare crime rates to precipitation, by county in Colorado.
 [Colorado County Seats](https://data-cdphe.opendata.arcgis.com/datasets/colorado-county-boundaries/) <br>
 
 ### Python functionalities
-Pandas, Geopy, matplotlib, requests, argparse, logging. 
+Pandas, Geopy, matplotlib, requests, argparse, logging, numpy 
 
 ### How to run this script
-what args you need, etc
+Required args - Year := 1999 through 2015
+Optional args - --verbose := VERBOSE -> changes logging level for recording to the log file
+              - --split := 7d, 30d, 90d -> changes the date range fences to apply to the considered ranges after a precipitation event
 
 ### Results of Analysis
-Hypothesis: Rain causes more crime. See [Crazy Ex-Girlfriend](https://www.youtube.com/watch?v=tDx6ai-HA1M&ab_channel=racheldoesstuff)
+Hypothesis: Rain causes a dip in immediate time frame crime. 
 
 ### Deliverables
 1. This README file
