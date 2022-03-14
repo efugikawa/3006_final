@@ -2,12 +2,13 @@
 """
 Created on Wed Mar  2 21:06:38 2022
 
-@author: bkmcc
+@author: bkmcc, ebf
 """
 import FP_precip_load as rain
 import FP_crime_load as crime
 import FP_CO_county_load as cnty
 import CO_log_setup as cls_log
+import FP_eda as eda
 import pandas as pd
 import numpy as np
 import argparse
@@ -29,7 +30,6 @@ def parser_config():
 
 
 def plotting_the_end(df_rain, df_crime, df_g_rain, Logger):
-
     pathName = os.getcwd()
 
     # plot of county sum of rain by date's - graph1
@@ -84,16 +84,16 @@ def the_big_deal(df_rain, df_crime, split, Logger):
 
     timedelta_str = str(day_fence) + ' day'
     df_g_rain['end_date_fence1'] = df_g_rain['obs_date'] + \
-        pd.Timedelta(timedelta_str)
+                                   pd.Timedelta(timedelta_str)
     df_g_rain['end_date_fence2'] = df_g_rain['end_date_fence1'] + \
-        pd.Timedelta(timedelta_str)
+                                   pd.Timedelta(timedelta_str)
 
     Logger.debug(
         f"Grouped rain DF data : Shape = {df_g_rain.shape} / Columns = {list(df_g_rain)}")
 
     # summarize crime data by number of offenses by county / date
     df_crime = df_crime.loc[:, [
-        'primary_county', 'incident_date', 'offense_name']]
+                                   'primary_county', 'incident_date', 'offense_name']]
     df_g_crime = df_crime.groupby(['primary_county', 'incident_date'])[
         'offense_name'].count().reset_index()
     df_g_crime = df_g_crime[df_g_crime['primary_county'] != '']
@@ -103,9 +103,13 @@ def the_big_deal(df_rain, df_crime, split, Logger):
 
     # add in sum of crimes inside and outside of time fence
     df_g_rain['crime_in'] = df_g_rain.apply(lambda x: df_g_crime.loc[(df_g_crime.incident_date >= x.obs_date) & (
-        df_g_crime.incident_date < x.end_date_fence1) & (df_g_crime.primary_county == x.county), 'offense_name'].sum(), axis=1)
-    df_g_rain['crime_out'] = df_g_rain.apply(lambda x: df_g_crime.loc[(df_g_crime.incident_date >= x.end_date_fence1) & (
-        df_g_crime.incident_date < x.end_date_fence2) & (df_g_crime.primary_county == x.county), 'offense_name'].sum(), axis=1)
+            df_g_crime.incident_date < x.end_date_fence1) & (
+                                                                                 df_g_crime.primary_county == x.county), 'offense_name'].sum(),
+                                            axis=1)
+    df_g_rain['crime_out'] = df_g_rain.apply(
+        lambda x: df_g_crime.loc[(df_g_crime.incident_date >= x.end_date_fence1) & (
+                df_g_crime.incident_date < x.end_date_fence2) & (
+                                             df_g_crime.primary_county == x.county), 'offense_name'].sum(), axis=1)
 
     return df_g_rain
 
@@ -123,7 +127,7 @@ def min_dist_count(row, df_cnty):
 
     minCnty = df_cnty['COUNTY'].loc[df_cnty['st_cnty_dist'].idxmin()]
 
-    return(minCnty)
+    return (minCnty)
 
 
 def main():
@@ -132,7 +136,7 @@ def main():
     args = parser_config()
 
     Logger = cls_log.Logger_FP_BE()
-    #Logger = cls_log.Logger_FP_BE(args.verbose)
+    # Logger = cls_log.Logger_FP_BE(args.verbose)
     Logger.info(f"MAIN PROGRAM START : {startTime}")
     Logger.info(f'main function started')
 
@@ -157,11 +161,11 @@ def main():
 
     # prep lat/long data of Precip & County to utilize geopy 'distance'  for merge prep
     df_unique_Precip = df_Precip.loc[:, [
-        'st_num', 'lat', 'lng', 'xy']].drop_duplicates()
+                                            'st_num', 'lat', 'lng', 'xy']].drop_duplicates()
     df_unique_Precip['county'] = df_unique_Precip['xy'].apply(
         lambda row: min_dist_count(row, df_County))
     df_Precip = pd.merge(df_Precip, df_unique_Precip, how='left', on=[
-                         'st_num', 'lat', 'lng', 'xy'])
+        'st_num', 'lat', 'lng', 'xy'])
     # df_Precip['county'] = df_Precip['county'].str.lower()
     Logger.debug(f" DF for precip has county added := {df_Precip.shape}")
     Logger.info(f"county classification added to precipitation data")
@@ -169,7 +173,11 @@ def main():
     # major join of crime data with weather data by split args value
     output_DF = the_big_deal(df_Precip, df_Crime, time_split, Logger)
 
-    # call the plotting function
+    # EDA graphs, which use 2010 as default year
+    eda.crime_eda()
+    eda.rain_eda()
+
+    # final graphs
     plotting_the_end(df_Precip, df_Crime, output_DF, Logger)
 
     pathName = os.getcwd()
@@ -184,7 +192,7 @@ def main():
 
     endTime = time.time()
     Logger.info(f'MAIN PROGRAM END: {endTime}')
-    Logger.info(f"TOTAL PROGRAM RUNTIME: {endTime-startTime}")
+    Logger.info(f"TOTAL PROGRAM RUNTIME: {endTime - startTime}")
     return
 
 
