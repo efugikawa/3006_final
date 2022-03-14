@@ -2,7 +2,7 @@
 """
 Created on Tue Mar  1 21:48:47 2022
 
-@author: bkmcc
+@author: bkmcc, ebf
 """
 
 import os
@@ -85,5 +85,5 @@ def load_CO_precip_data(rprtYr, Logger):
     return out_precip_DF
 
 
-# if __name__ == "__main__":
-#     load_CO_precip_data()
+if __name__ == "__main__":
+    load_CO_precip_data()
