@@ -9,7 +9,6 @@ import os
 import requests
 import pandas as pd
 import numpy as np
-import logging
 
 
 def clean_CO_precip_data(raw_DF, Logger):
@@ -43,7 +42,7 @@ def clean_CO_precip_data(raw_DF, Logger):
     return raw_DF
 
 
-def load_CO_precip_data(rprtYr, Logger=logging.getLogger()):
+def load_CO_precip_data(rprtYr, Logger):
     """function to load the CO precipitation data for a selected year"""
     pathName = os.getcwd()
     fileName = "Rain_hail_snow_in_CO_1999_to_2015.csv"

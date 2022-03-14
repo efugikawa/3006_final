@@ -1,5 +1,5 @@
 requests==2.27.1
+numpy==1.22.3
 pandas==1.4.1
 matplotlib==3.5.1
 geopy==2.2.0
-numpy
