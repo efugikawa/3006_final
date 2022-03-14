@@ -68,7 +68,3 @@ def rain_eda():
     plt.title("Average Precipitation by Station, 2010")
     plt.plot(sorted_avg_precip.keys(), sorted_avg_precip.values())
     plt.savefig("avg_precip_by_station")
-
-
-crime_eda()
-rain_eda()
